@@ -1,0 +1,72 @@
+
+CREATE DATABASE hh
+    DEFAULT CHARACTER SET = 'utf8mb4';
+
+USE hh;  -- Cambia a la base de datos hh
+
+CREATE TABLE Cuerpos_del_ejercito (
+  ID_B INTEGER(5) PRIMARY KEY,
+  Denominación VARCHAR(15) NOT NULL,
+  soldadosID_Soldado INTEGER(10)
+);
+
+CREATE TABLE Soldados (
+  ID_Soldado INTEGER(10) AUTO_INCREMENT PRIMARY KEY,
+  Nombre VARCHAR(20) NOT NULL,
+  Apellido VARCHAR(20) NOT NULL,
+  Grado VARCHAR(20) NOT NULL,
+  CuartelesID_Cuartel INTEGER(10),
+  CompañiasID_Compañia INTEGER(10)
+);
+
+CREATE TABLE Cuarteles (
+  ID_Cuartel INTEGER(10) PRIMARY KEY,
+  Nombre VARCHAR(30) NOT NULL,
+  Ubicación VARCHAR(30) NOT NULL
+);
+
+CREATE TABLE Cuarteles_Compañias (
+  CuartelesID_Cuartel INTEGER(10),
+  CompañiasID_Compañia INTEGER(10),
+  PRIMARY KEY (CuartelesID_Cuartel, CompañiasID_Compañia)
+);
+
+CREATE TABLE Compañias (
+  ID_Compañia INTEGER(10) PRIMARY KEY,
+  Actividad_Principal VARCHAR(40) NOT NULL
+);
+
+CREATE TABLE Servicio (
+  ID_Servicio INTEGER(10) PRIMARY KEY,
+  Actividad VARCHAR(30) NOT NULL,
+  Fecha_de_realización VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE Soldados_Servicio (
+  soldadosID_Soldado INTEGER(10),
+  ServiciolD_Servicio INTEGER(10),
+  PRIMARY KEY (soldadosID_Soldado, ServiciolD_Servicio)
+);
+
+-- Sentencias ALTER TABLE para crear las llaves foráneas
+
+ALTER TABLE Soldados
+  ADD CONSTRAINT FK_ID_Soldado FOREIGN KEY (CuartelesID_Cuartel) REFERENCES Cuarteles (ID_Cuartel);
+
+ALTER TABLE Soldados
+  ADD CONSTRAINT FK_Soldados_Compañias FOREIGN KEY (CompañiasID_Compañia) REFERENCES Compañias (ID_Compañia);
+
+ALTER TABLE Cuarteles_Compañias
+  ADD CONSTRAINT FK_Cuarteles_Compañias_Cuarteles FOREIGN KEY (CuartelesID_Cuartel) REFERENCES Cuarteles (ID_Cuartel);
+
+ALTER TABLE Cuarteles_Compañias
+  ADD CONSTRAINT FK_Cuarteles_Compañias_Compañias FOREIGN KEY (CompañiasID_Compañia) REFERENCES Compañias (ID_Compañia);
+
+ALTER TABLE Soldados_Servicio
+  ADD CONSTRAINT FK_Soldados_Servicio_Soldados FOREIGN KEY (soldadosID_Soldado) REFERENCES Soldados (ID_Soldado);
+
+ALTER TABLE Soldados_Servicio
+  ADD CONSTRAINT FK_Soldados_Servicio_Servicio FOREIGN KEY (ServiciolD_Servicio) REFERENCES Servicio (ID_Servicio);
+
+ALTER TABLE Cuerpos_del_ejercito
+  ADD CONSTRAINT FK_Cuerpos_del_ejercito_Soldados FOREIGN KEY (soldadosID_Soldado) REFERENCES Soldados (ID_Soldado);
